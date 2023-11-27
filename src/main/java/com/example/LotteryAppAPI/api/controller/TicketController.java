@@ -7,6 +7,9 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/")
 public class TicketController {
@@ -19,8 +22,23 @@ public class TicketController {
     }
 
     @GetMapping("/tickets")
-    public Iterable<Ticket> getTickets() {
-        return ticketRepository.findAll();
+    public Iterable<Ticket> getTickets(@RequestParam(name = "ticketDate", required = false) String ticketDate, @RequestParam(name = "buyerName", required = false) String buyerName) {
+        if (ticketDate != null && !ticketDate.isEmpty()) {
+            // Filter tickets by buyerName
+            return ticketRepository.findByTicketDate(ticketDate);
+        } else {
+            if (buyerName != null && !buyerName.isEmpty()) {
+                return ticketRepository.findByBuyerName(buyerName);
+            }
+            // Return all tickets if no buyerName parameter is provided
+            return ticketRepository.findAll();
+        }
+    }
+
+    @PostMapping("/tickets")
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<Ticket> createTickets(@RequestBody Iterable<Ticket> tickets) {
+        return ticketRepository.saveAll(tickets);
     }
 
     @PostMapping("/ticket")
