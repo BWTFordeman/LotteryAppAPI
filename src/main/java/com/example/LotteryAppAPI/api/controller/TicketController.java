@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://zealous-forest-0040a6803.4.azurestaticapps.net/")
 @RestController
 @RequestMapping("/")
 public class TicketController {
